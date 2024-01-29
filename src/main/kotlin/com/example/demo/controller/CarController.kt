@@ -2,10 +2,12 @@ package com.example.demo.controller
 
 import com.example.demo.controller.dto.Car
 import com.example.demo.controller.dto.CreateCarRequest
+import com.example.demo.controller.dto.ModifyCarRequest
 import com.example.demo.service.CarService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -29,5 +31,10 @@ class CarController(val carService: CarService) {
     @GetMapping("/{carId}")
     fun getCar(@PathVariable carId: Int): Car {
         return carService.getCar(carId)
+    }
+
+    @PutMapping("/{carId}")
+    fun modifyCar(@PathVariable carId: Int, @RequestBody carInformation: ModifyCarRequest): Car {
+        return carService.modifyCar(carId, carInformation)
     }
 }
