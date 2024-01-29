@@ -2,6 +2,7 @@ package com.example.demo.rest
 
 import com.example.demo.controller.dto.Car
 import com.example.demo.controller.dto.CreateCarRequest
+import com.example.demo.controller.dto.ModifyCarRequest
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -15,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 import org.springframework.web.servlet.function.RequestPredicates.contentType
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -59,9 +61,45 @@ class CarControllerTest {
         assertThat(found.id).isEqualTo(car.id)
     }
 
+    @Test
+    @Sql(AFTER_MIGRATE)
+    fun testModifyOne() {
+        val originalValue = CreateCarRequest(
+            brand = "Ford",
+            model = "Mustang",
+            color = "Red"
+        )
+        val modifiedValue = ModifyCarRequest(
+            brand = "Chery",
+            model = "Orinoco",
+            color = "Brown"
+        )
+
+        val created = doCreate(originalValue)
+        val modified = doModify(created.id!!, modifiedValue)
+
+        assertThat(created.id).isEqualTo(modified.id)
+        assertThat(created.model).isNotEqualTo(modified.model)
+        assertThat(created.brand).isNotEqualTo(modified.brand)
+        assertThat(created.color).isNotEqualTo(modified.color)
+    }
+
 
     fun doCreate(input: CreateCarRequest): Car {
         return mockMvc.post("/cars") {
+            contentType = MediaType.APPLICATION_JSON
+            content = mapper.writeValueAsString(input)
+            accept = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk() }
+            content { contentType(MediaType.APPLICATION_JSON) }
+        }.andReturn().response.contentAsString.let {
+            mapper.readValue(it, Car::class.java)
+        }
+    }
+
+    fun doModify(id: Int, input: ModifyCarRequest): Car {
+        return mockMvc.put("/cars/${id}") {
             contentType = MediaType.APPLICATION_JSON
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON

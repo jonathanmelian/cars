@@ -2,15 +2,14 @@ package com.example.demo.service
 
 import com.example.demo.controller.dto.Car
 import com.example.demo.controller.dto.CreateCarRequest
+import com.example.demo.controller.dto.ModifyCarRequest
 import com.example.demo.repository.CarRepository
-import com.example.demo.mapper.CarMapper
 import com.example.demo.model.CarEntity
-import java.util.NoSuchElementException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
+import kotlin.NoSuchElementException
 
 @Service
 class CarService(
@@ -54,6 +53,30 @@ class CarService(
             brand = carEntity.brand,
             model = carEntity.model,
             color = carEntity.color
+        )
+    }
+
+    fun modifyCar(carId: Int, carInformation: ModifyCarRequest): Car {
+        try {
+            getCar(carId)
+        } catch (e: NoSuchElementException) {
+            throw NoSuchElementException("can't edit a car that doesn't exist")
+        }
+
+        val editedCarEntity = CarEntity().apply {
+            carsId = carId
+            brand = carInformation.brand
+            model = carInformation.model
+            color = carInformation.color
+        }
+
+        val updatedEntry = carRepository.save(editedCarEntity)
+
+        return Car(
+            id = updatedEntry.carsId,
+            brand = updatedEntry.brand,
+            model = updatedEntry.model,
+            color = updatedEntry.color
         )
     }
 }
