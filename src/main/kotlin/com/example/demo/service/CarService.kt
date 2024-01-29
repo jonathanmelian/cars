@@ -2,6 +2,7 @@ package com.example.demo.service
 
 import com.example.demo.controller.dto.Car
 import com.example.demo.controller.dto.CreateCarRequest
+import com.example.demo.controller.dto.ModifyCarRequest
 import com.example.demo.repository.CarRepository
 import com.example.demo.mapper.CarMapper
 import com.example.demo.model.CarEntity
@@ -54,6 +55,30 @@ class CarService(
             brand = carEntity.brand,
             model = carEntity.model,
             color = carEntity.color
+        )
+    }
+
+    fun updateCar(carId: Int, updateCarRequest: ModifyCarRequest): Car {
+        try {
+            getCar(carId)
+        } catch (e: NoSuchElementException) {
+            throw NoSuchElementException("A car that has not been created cannot be modified.")
+        }
+
+        val carEntity = CarEntity().apply {
+            carsId = carId
+            brand = updateCarRequest.brand
+            model = updateCarRequest.model
+            color = updateCarRequest.color
+        }
+
+        val updatedCar = carRepository.save(carEntity)
+
+        return Car(
+                id = carEntity.carsId,
+                brand = carEntity.brand,
+                model = carEntity.model,
+                color = carEntity.color
         )
     }
 }

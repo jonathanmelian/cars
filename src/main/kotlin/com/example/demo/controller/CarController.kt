@@ -2,6 +2,7 @@ package com.example.demo.controller
 
 import com.example.demo.controller.dto.Car
 import com.example.demo.controller.dto.CreateCarRequest
+import com.example.demo.controller.dto.ModifyCarRequest
 import com.example.demo.service.CarService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

@@ -13,4 +13,6 @@ interface CarMapper {
     fun toDto(carEntity: CarEntity): Car
 
     fun toEntity(createCarRequest: CreateCarRequest): CarEntity
+
+
 }
