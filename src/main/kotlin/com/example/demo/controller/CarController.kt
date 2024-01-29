@@ -33,7 +33,7 @@ class CarController(val carService: CarService) {
     }
 
     @PutMapping("/{carId}")
-    fun updateCar(@PathVariable carId: Int, @RequestBody request: CreateCarRequest): Car {
+    fun updateCar(@PathVariable carId: Int, @RequestBody request: ModifyCarRequest): Car {
         return carService.updateCar(carId, request)
     }
 }
