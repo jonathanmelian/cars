@@ -4,3 +4,5 @@ CREATE TABLE cars (
   model VARCHAR(255) NOT NULL,
   color VARCHAR(255) NOT NULL
 );
+INSERT INTO cars (`cars_id`, brand, model, color)
+VALUES (1, 'kia', 'sorento', 'yellow');

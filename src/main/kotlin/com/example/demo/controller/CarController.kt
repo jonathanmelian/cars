@@ -3,6 +3,7 @@ package com.example.demo.controller
 import com.example.demo.controller.dto.Car
 import com.example.demo.controller.dto.CreateCarRequest
 import com.example.demo.service.CarService
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,7 +23,7 @@ class CarController(val carService: CarService) {
     }
 
     @GetMapping
-    fun getCars(pageable: Pageable): Page<Car> {
+    fun getCars(pageable: Pageable): List<Car> {
         return carService.getCars(pageable)
     }
 
